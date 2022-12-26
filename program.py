@@ -119,6 +119,7 @@ class Bottle() :
         return self.bottle_hitbox
 
 game = GameEngine()
+
 while run :
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # jeśli gracz zamknie okienko
