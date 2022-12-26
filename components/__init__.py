@@ -4,4 +4,5 @@ from .atm import ATM
 from .plate import Plate
 from .player import Player
 from .slimefac import SlimeFactory
-from .utils import Rect, Text
+from .utils import Rect, Text, Rectangle
+from .collidcheck import *

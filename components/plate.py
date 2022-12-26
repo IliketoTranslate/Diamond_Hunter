@@ -19,7 +19,8 @@ class Plate():
         pg.draw.rect(wn, (100, 10, 10), self.hitbox)
     def checkIsPressed(self, rect):
         number = 0
-        if self.hitbox.colliderect(rect):
+        _, coord = rect
+        if self.hitbox.colliderect(coord):
             self.is_pressed = True
             self.height = 5
             self.append = 1

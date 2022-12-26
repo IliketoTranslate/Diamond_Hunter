@@ -1,14 +1,10 @@
-from components.slimefac import SlimeFactory
-from components.utils import Text, Rect
-from components.plate import Plate
-from components.atm import ATM
-from components.player import Player
-from components.defs import sc_width, sc_height, wn
+from components import *
 
 atm = ATM()
 
+#zakladam ze Main to game engine
 class Main():
-    def __init__(self, player) -> None:
+    def __init__(self, objects) -> None:
         self.money = 0
         self.factories = list()
         self.texts = list()
@@ -18,7 +14,11 @@ class Main():
         self.test = None
         self.amsl = 0
         self.rect = 0
-        self.player = player
+        self.nextId = 1
+        self.objects = objects
+        for el in self.objects:
+            self.registerObject(el)
+        self.collcheck = CollidChecker(self.objects)
 
         x = 270
         price = 100
@@ -62,8 +62,8 @@ class Main():
                 text.drawTextVar("Money: "+ str(self.money))
             if y == 10:
                     text.drawTextVar("Slimes: "+ str(self.amsl))
-    def PlateFunc(self):
-        rect = self.player.getRect()
+    def PlateFunc(self, player):
+        rect = player.getRect()
         for plate in self.plates:
             plate.checkIsPressed(rect)
             x, y = plate.getPos()
@@ -79,7 +79,42 @@ class Main():
     def RectFunc(self):
         for rect in self.rects:
             rect.draw()
-            rect2 = rect.getRect()
-            self.player.move(rect2)
     def getRect(self):
         return self.rect
+    def getAllObjects(self) -> list():
+        l = list()
+        for rect in self.rects:
+            l.append(rect)
+        return l
+    #brakuje game engine, dorzucam tu pseudo-rejestr
+    def registerObject(self, object) -> None:
+        object.setId(self.nextId)
+        self.nextId += 1
+    def move(self):
+        keys = pg.key.get_pressed()
+        new_x =0
+        new_y =0
+        if keys[pg.K_w]:
+            new_y=-1
+        if keys[pg.K_a]:
+            new_x = -1
+        if keys[pg.K_s]:
+            new_y = 1
+        if keys[pg.K_d]:
+            new_x = 1
+        for el in self.objects:
+            if el.is_playable():
+                _, coord = el.getRect()
+                new_x *= el.get_speed()
+                new_y *= el.get_speed()
+                if not(self.collcheck.checkCollision(el, (new_x, new_y))):
+                    el.update(new_x, new_y)
+
+            if el.is_movable():
+                el.move()
+
+    def draw(self):
+        for el in self.objects:
+            color, coord = el.getRect()
+            pg.draw.rect(wn, color, coord)
+

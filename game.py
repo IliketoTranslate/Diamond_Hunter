@@ -6,9 +6,15 @@ pg.init()
 
 player = Player()
 
-main = Main(player)
 clock = pg.time.Clock()
 run = True
+
+all_objects = list()
+all_objects.append(Rectangle(500, 400, 200, 50))
+all_objects.append(Player())
+
+main = Main(all_objects)
+
 while run:
     clock.tick(60)
     for event in pg.event.get():
@@ -18,11 +24,16 @@ while run:
     wn.fill(bg_color)
 
     #rect = main.getRect()
+    #to wyswietla prostokat z lewej dolnej strony ekranu
     main.ATMFunc()
-    main.PlateFunc()
+    #co to robi ?
+    main.PlateFunc(player)
+    #to wyswietla prostokaciki na dole
     main.SlimeFactoriesStart()
     main.TextFunc()
-    main.RectFunc()
-    player.draw()
+    #to wyswietla prostokat w centrum ekranu
+    #main.RectFunc()
+    main.move()
+    main.draw()
 
     pg.display.update()
