@@ -3,8 +3,8 @@ import pygame as pg
 class Screen():
     def __init__(self):
         pg.init()
-        self._screen_h = 320
-        self._screen_w = 320
+        self._screen_h = 480
+        self._screen_w = 640
         self._screen_size = None
         self._window = pg.display.set_mode((self._screen_w, self._screen_h), pg.RESIZABLE)
         self._window.fill((0,0,0)) #set background
@@ -28,6 +28,9 @@ class Screen():
     
     def drawObject(self, object):
         pg.draw.rect(self._window, object.getColor(), object.getRect())
+
+    def refresh(self):
+        self._window.fill((0,0,0)) #set background
 
     def update(self):
         pg.display.update()

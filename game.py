@@ -6,7 +6,7 @@ class Game():
     def __init__(self) -> None:
         self._screen = Screen()
         self._done = False
-        self._shift = 100
+        self._shift = 30
         self._objects = list()
         self._player = None
         _parser = Boardparser(self._shift, "board.txt")
@@ -19,20 +19,62 @@ class Game():
         if event.type == pg.QUIT:
             self._done = True
         elif event.type == pg.KEYDOWN:
+            print("key pressed")
+            delta_x = 0
+            delta_y = 0
             keys = pg.key.get_pressed()
             if keys[pg.K_LEFT]:
-                new_y=-1
+                delta_x = -self._shift
+            #    self._player.getRect().move_ip(-self._shift, 0)
             if keys[pg.K_RIGHT]:
-                new_x = -1
+                delta_x = self._shift
             if keys[pg.K_UP]:
-                new_y = 1
+                delta_y = -self._shift
             if keys[pg.K_DOWN]:
-                new_x = 1
+                delta_y = self._shift
+            if self.movePlayer(delta_x, delta_y) == True:
+                print("Move player by x="+str(delta_x)+" y="+str(delta_y))
+                self._player.getRect().move_ip(delta_x, delta_y)
         else:
             self._screen.processEvent(event)
 
+    def movePlayer(self, delta_x, delta_y) -> bool:
+        updated_rect = self._player.getRect().move(delta_x, delta_y)
+        rect_list = [el.getRect() for el in self._objects]
+        idx = updated_rect.collidelist(rect_list)
+        if idx != -1:
+            collided_obj = self._objects[idx]
+            if collided_obj.solid():
+                if collided_obj.movable():#rock
+                    if delta_y == 0:
+                        if self.canMoveRock(collided_obj, delta_x):
+                            self.moveObject(collided_obj, delta_x, 0)
+                            return True
+                    else:#moving up/down, don't check rock
+                        return False
+                else:#wall
+                    return False #move not allowed
+            else:
+                if not collided_obj.dropable():#Mud
+                    self._objects.pop(idx)
+                    return True
+        else:#no collision
+            return True
+
+    def canMoveRock(self, rock, delta_x):
+        searched_rect = rock.getRect().move(delta_x, 0)
+        for el in self._objects:
+            if searched_rect.contains(el.getRect()):
+                return False
+        return True
+
+
+    def moveObject(self, object, delta_x, delta_y):
+        object.getRect().move_ip(delta_x, delta_y)
+
     def mainLoop(self):
         while not self._done:
+            self._screen.refresh()
             for el in self._objects:
                 self._screen.drawObject(el)
             self._screen.update()
