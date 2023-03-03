@@ -49,6 +49,12 @@ class Diamond(GObject):
         self._color = (225,242,240)
         self._droppable = True
 
+class Exit(GObject):
+    def __init__(self, pos_x, pos_y, size):
+        super().__init__(pos_x, pos_y, size)
+        self._color = (225,242,240)
+        self._solid = True
+
 class Player(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)

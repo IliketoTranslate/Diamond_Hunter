@@ -86,7 +86,6 @@ class Game():
 
     def mainLoop(self):
         clock = pg.time.Clock()
-        prev_tick = clock.tick(60)
         ticks = 0
         while not self._done:
             ticks += clock.tick(60)
@@ -95,10 +94,8 @@ class Game():
                 self._screen.drawObject(el)
             self._screen.update()
             for event in pg.event.get():
-                #print("Event "+str(event.type))
                 self.processEvent(event)
             if ticks > self._tick:
-                #prev_tick = ticks
                 ticks = 0
                 self.moveObjects()
         self._screen.cleanup()

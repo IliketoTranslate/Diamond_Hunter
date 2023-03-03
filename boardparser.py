@@ -22,6 +22,10 @@ class Boardparser():
                             self._objects.append(object.Wall(self.pos_x, self.pos_y, self._shift))
                         elif character == 'P':
                             self._objects.append(object.Player(self.pos_x, self.pos_y, self._shift))
+                        elif character == 'D':
+                            self._objects.append(object.Diamond(self.pos_x, self.pos_y, self._shift))
+                        elif character == 'E':
+                            self._objects.append(object.Exit(self.pos_x, self.pos_y, self._shift))
                         self.pos_x += self._shift
                     self.pos_x = 0
                     self.pos_y += self._shift
