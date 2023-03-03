@@ -7,6 +7,7 @@ class Game():
         self._screen = Screen()
         self._done = False
         self._shift = 30
+        self._tick = 200 #milliseconds
         self._objects = list()
         self._player = None
         _parser = Boardparser(self._shift, "board.txt")
@@ -70,10 +71,29 @@ class Game():
 
 
     def moveObject(self, object, delta_x, delta_y):
+        print("moving object x="+str(delta_x)+" y="+str(delta_y))
         object.getRect().move_ip(delta_x, delta_y)
 
+    def moveObjects(self):
+        print("Moving objects")
+        for object in self._objects:
+            if object.dropable():
+                check_rect = object.getRect().move(0, self._shift)
+                for el in self._objects:
+                    if check_rect.contains(el.getRect()):
+                        print("Found something below")
+                        break#something exists below
+                #if we get here, there is nothing below, it can drop
+                else:
+                    self.moveObject(object, 0, self._shift)
+
     def mainLoop(self):
+        clock = pg.time.Clock()
+        prev_tick = clock.tick(60)
+        ticks = 0
+        print(prev_tick)
         while not self._done:
+            ticks += clock.tick(60)
             self._screen.refresh()
             for el in self._objects:
                 self._screen.drawObject(el)
@@ -81,4 +101,8 @@ class Game():
             for event in pg.event.get():
                 #print("Event "+str(event.type))
                 self.processEvent(event)
+            if ticks > self._tick:
+                #prev_tick = ticks
+                ticks = 0
+                self.moveObjects()
         self._screen.cleanup()
