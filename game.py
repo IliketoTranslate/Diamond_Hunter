@@ -20,13 +20,11 @@ class Game():
         if event.type == pg.QUIT:
             self._done = True
         elif event.type == pg.KEYDOWN:
-            print("key pressed")
             delta_x = 0
             delta_y = 0
             keys = pg.key.get_pressed()
             if keys[pg.K_LEFT]:
                 delta_x = -self._shift
-            #    self._player.getRect().move_ip(-self._shift, 0)
             if keys[pg.K_RIGHT]:
                 delta_x = self._shift
             if keys[pg.K_UP]:
@@ -34,7 +32,7 @@ class Game():
             if keys[pg.K_DOWN]:
                 delta_y = self._shift
             if self.movePlayer(delta_x, delta_y) == True:
-                print("Move player by x="+str(delta_x)+" y="+str(delta_y))
+                #print("Move player by x="+str(delta_x)+" y="+str(delta_y))
                 self._player.getRect().move_ip(delta_x, delta_y)
         else:
             self._screen.processEvent(event)
@@ -56,7 +54,8 @@ class Game():
                 else:#wall
                     return False #move not allowed
             else:
-                if not collided_obj.dropable():#Mud
+                if not collided_obj.dropable() \
+                    and not collided_obj.playable():#Mud
                     self._objects.pop(idx)
                     return True
         else:#no collision
@@ -71,17 +70,15 @@ class Game():
 
 
     def moveObject(self, object, delta_x, delta_y):
-        print("moving object x="+str(delta_x)+" y="+str(delta_y))
+        #print("moving object x="+str(delta_x)+" y="+str(delta_y))
         object.getRect().move_ip(delta_x, delta_y)
 
     def moveObjects(self):
-        print("Moving objects")
         for object in self._objects:
             if object.dropable():
                 check_rect = object.getRect().move(0, self._shift)
                 for el in self._objects:
                     if check_rect.contains(el.getRect()):
-                        print("Found something below")
                         break#something exists below
                 #if we get here, there is nothing below, it can drop
                 else:
@@ -91,7 +88,6 @@ class Game():
         clock = pg.time.Clock()
         prev_tick = clock.tick(60)
         ticks = 0
-        print(prev_tick)
         while not self._done:
             ticks += clock.tick(60)
             self._screen.refresh()
