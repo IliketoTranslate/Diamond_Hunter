@@ -46,20 +46,20 @@ class Mud(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)
         self._color = (214,122,25)
-        self.addSkin("mud.png")
+        self.addSkin("pic/mud.png")
 
 class Wall(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)
         self._color = (136,136,136)
         self._solid = True
-        self.addSkin("wall.png")
+        self.addSkin("pic/wall.png")
 
 class Stone(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)
         self._color = (225,242,240)
-        self.addSkin("stone.png")
+        self.addSkin("pic/stone.png")
         self._dropable = True
         self._solid = True
         self._movable = True
@@ -68,23 +68,24 @@ class Diamond(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)
         self._color = (2,38,244)
-        self.addSkin("diamond.png")
-        self.addSkin("diamond1.png")
-        self.addSkin("diamond2.png")
-        self.addSkin("diamond3.png")
+        self.addSkin("pic/diamond.png")
+        self.addSkin("pic/diamond1.png")
+        self.addSkin("pic/diamond2.png")
+        self.addSkin("pic/diamond3.png")
         self._dropable = True
 
 class Exit(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)
-        self.addSkin("doors.png")
-        self._open_doors = pg.image.load("doors2.png")
+        self.addSkin("pic/doors.png")
+        self._open_doors = pg.image.load("pic/doors2.png")
         self._open_doors = pg.transform.scale(self._open_doors, (30, 30))
         self._open = False
         self._color = (255,51,0)
         self._solid = True
     def openDoors(self):
         self._open = True
+        self._solid = False
     def getSkin(self):
         if self._open == True:
             return self._open_doors
@@ -96,9 +97,9 @@ class Player(GObject):
         super().__init__(pos_x, pos_y, size)
         self._color = (97,255,0)
         self._playable = True
-        self._standing = pg.image.load("player.png")
+        self._standing = pg.image.load("pic/player.png")
         self._standing = pg.transform.scale(self._standing, (30, 30))
-        self.addSkin("player_move.png")
+        self.addSkin("pic/player_move.png")
         self._walking = False
         self._left = False
     def standing(self):

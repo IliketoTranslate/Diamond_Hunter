@@ -1,4 +1,4 @@
-import object
+from . import object
 
 class Boardparser():
     def __init__(self, shift, file):
@@ -30,7 +30,7 @@ class Boardparser():
                     self.pos_x = 0
                     self.pos_y += self._shift
         except FileNotFoundError:
-            print("File not found "+self.file)
+            print("File not found "+self._file)
 
     def generateObjects(self):
         for el in self._objects:

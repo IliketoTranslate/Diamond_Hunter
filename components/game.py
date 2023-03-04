@@ -1,30 +1,33 @@
-from screen import Screen
-from boardparser import Boardparser
-from object import StateText
+from .screen import Screen
+from .boardparser import Boardparser
+from .object import StateText,Exit
 import pygame as pg
 
 from enum import Enum
 
 class GameStatus(Enum):
-    GAME_EXIT = 0
-    PLAYER_DIED = 1
-    ESCAPE_HIT = 2
+    NONE = 0
+    GAME_INIT = 1
+    GAME_EXIT = 2
+    PLAYER_DIED = 3
+    NEXT_LEVEL = 4
 
 class Game():
-    def __init__(self) -> None:
-        self._screen = Screen()
+    def __init__(self, screen) -> None:
+        self._screen = screen
         self._done = False
         self._return_val = GameStatus.GAME_EXIT
         self._shift = 30
         self._tick = 200 #milliseconds
         self._player = None
         self._chances = 3
+        self._diamonds = 1#5
         self.resetGame()
     
     def resetGame(self):
         self._objects = []
         self._state = StateText(self._chances, (255,255,255))
-        _parser = Boardparser(self._shift, "board.txt")
+        _parser = Boardparser(self._shift, "boards/board1.txt")
         for el in _parser.generateObjects():
             self._objects.append(el)
             if el.playable() == True:
@@ -42,7 +45,7 @@ class Game():
             pg.time.set_timer(pg.KEYDOWN, 200)
             if keys[pg.K_ESCAPE]:
                 self._done = True
-                self._return_val = GameStatus.ESCAPE_HIT
+                self._return_val = GameStatus.GAME_INIT
             if keys[pg.K_LEFT]:
                 delta_x = -self._shift
                 self._player.setWalking(True)
@@ -83,6 +86,9 @@ class Game():
                 else:#wall
                     return False #move not allowed
             else:
+                if isinstance(collided_obj, Exit):#open doors, end level
+                    self._return_val = GameStatus.NEXT_LEVEL
+                    return True
                 if not collided_obj.dropable() \
                     and not collided_obj.playable():#Mud
                     self._objects.pop(idx)
@@ -90,6 +96,8 @@ class Game():
                 elif collided_obj.dropable():#Diamond
                     self._objects.pop(idx)
                     self._state.addPoint()
+                    if self._state.getPoints() == self._diamonds:
+                        self.openDoors()
                     return True
         else:#no collision
             return True
@@ -154,6 +162,12 @@ class Game():
         self._state.setChances(self._chances)
         self.resetGame()
 
+    def openDoors(self):
+        for object in self._objects:
+            if isinstance(object, Exit):
+                object.openDoors()
+                break
+
     def mainLoop(self):
         clock = pg.time.Clock()
         ticks = 0
@@ -171,5 +185,4 @@ class Game():
                     el.changeSkin()
                 ticks = 0
                 self.moveObjects()
-        self._screen.cleanup()
         return self._return_val
