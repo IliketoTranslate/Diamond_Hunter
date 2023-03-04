@@ -53,11 +53,15 @@ class Wall(GObject):
         super().__init__(pos_x, pos_y, size)
         self._color = (136,136,136)
         self._solid = True
+        self.addSkin("wall.png")
+        self._toblit = True
 
 class Stone(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)
         self._color = (225,242,240)
+        self.addSkin("stone.png")
+        self._toblit = True
         self._dropable = True
         self._solid = True
         self._movable = True
@@ -76,8 +80,20 @@ class Diamond(GObject):
 class Exit(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)
+        self.addSkin("doors.png")
+        self._open_doors = pg.image.load("doors2.png")
+        self._open_doors = pg.transform.scale(self._open_doors, (30, 30))
+        self._open = False
         self._color = (255,51,0)
         self._solid = True
+        self._toblit = True
+    def openDoors(self):
+        self._open = True
+    def getSkin(self):
+        if self._open == True:
+            return self._open_doors
+        else:
+            return self._skins[0]
 
 class Player(GObject):
     def __init__(self, pos_x, pos_y, size):

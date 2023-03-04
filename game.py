@@ -3,14 +3,23 @@ from boardparser import Boardparser
 from object import Text
 import pygame as pg
 
+from enum import Enum
+
+class GameStatus(Enum):
+    GAME_EXIT = 0
+    PLAYER_DIED = 1
+    ESCAPE_HIT = 2
+
 class Game():
     def __init__(self) -> None:
         self._screen = Screen()
         self._done = False
+        self._return_val = GameStatus.GAME_EXIT
         self._shift = 30
         self._tick = 200 #milliseconds
         self._objects = list()
         self._player = None
+        self._chances = 3
         self._state = Text("Diamenty: ", (255,255,255))
         _parser = Boardparser(self._shift, "board.txt")
         for el in _parser.generateObjects():
@@ -22,13 +31,14 @@ class Game():
     def processEvent(self, event):
         if event.type == pg.QUIT:
             self._done = True
+            self._return_val = GameStatus.GAME_EXIT
         elif event.type == pg.KEYDOWN:
             delta_x = 0
             delta_y = 0
             keys = pg.key.get_pressed()
             if keys[pg.K_ESCAPE]:
                 self._done = True
-                self._player.setWalking(True)
+                self._return_val = GameStatus.ESCAPE_HIT
             if keys[pg.K_LEFT]:
                 delta_x = -self._shift
                 self._player.setWalking(True)
@@ -102,6 +112,12 @@ class Game():
                 else:
                     self.moveObject(object, 0, self._shift)
 
+    def killPlayer(self):
+        self._chances -= 1
+        if self._chances == 0:
+            self._return_val = GameStatus.PLAYER_DIED
+            self._done = True
+
     def mainLoop(self):
         clock = pg.time.Clock()
         ticks = 0
@@ -124,3 +140,4 @@ class Game():
                 ticks = 0
                 self.moveObjects()
         self._screen.cleanup()
+        return self._return_val
