@@ -28,17 +28,26 @@ class Game():
             keys = pg.key.get_pressed()
             if keys[pg.K_ESCAPE]:
                 self._done = True
+                self._player.setWalking(True)
             if keys[pg.K_LEFT]:
                 delta_x = -self._shift
+                self._player.setWalking(True)
+                self._player.setLeft()
             if keys[pg.K_RIGHT]:
                 delta_x = self._shift
+                self._player.setWalking(True)
+                self._player.setRight()
             if keys[pg.K_UP]:
                 delta_y = -self._shift
+                self._player.setWalking(True)
             if keys[pg.K_DOWN]:
                 delta_y = self._shift
+                self._player.setWalking(True)
             if self.movePlayer(delta_x, delta_y) == True:
                 #print("Move player by x="+str(delta_x)+" y="+str(delta_y))
                 self._player.getRect().move_ip(delta_x, delta_y)
+        elif event.type == pg.KEYUP:
+            self._player.setWalking(False)
         else:
             self._screen.processEvent(event)
 

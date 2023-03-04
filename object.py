@@ -89,15 +89,25 @@ class Player(GObject):
         self.addSkin("player_move.png")
         self._toblit = True
         self._walking = False
+        self._left = False
     def standing(self):
         return self._standing
+    def setWalking(self, isWalking):
+        self._walking = isWalking
     def walking(self):
         return self._walking
     def getSkin(self):
         if self._walking == True:
-            return self._skins[self._skin_idx]
+            disp_skin = self._skins[self._skin_idx]
+            if self._left == True:
+                disp_skin = pg.transform.flip(disp_skin, True, False)
+            return disp_skin
         else:
             return self._standing
+    def setLeft(self):
+        self._left = True
+    def setRight(self):
+        self._left = False
         
 class Text():
     def __init__(self, text, color) -> None:
