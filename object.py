@@ -55,7 +55,10 @@ class Diamond(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)
         self._color = (2,38,244)
+        self._skin = pg.image.load("diamond.png")
+        self._skin = pg.transform.scale(self._skin, (30, 30))
         self._dropable = True
+        self._toblit = True
 
 class Exit(GObject):
     def __init__(self, pos_x, pos_y, size):
