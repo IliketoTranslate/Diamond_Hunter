@@ -22,8 +22,6 @@ class Main:
             rc = self._game.mainLoop()
             if rc == GameStatus.GAME_EXIT:
                 self._running = False
-            elif rc == GameStatus.PLAYER_DIED:
-                rc = GameStatus.GAME_INIT
         self._screen.cleanup()
 
 if __name__ == "__main__":

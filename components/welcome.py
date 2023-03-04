@@ -24,7 +24,7 @@ class Welcome():
     def run(self):
         running = True
         rc = GameStatus.NONE
-        i=255
+        i=256
         while running:
             self._screen.refresh()
             self._screen.blitObject(self._greet)
@@ -35,7 +35,9 @@ class Welcome():
             self._screen.update()
             for event in pg.event.get():
                 rc = self.processEvent(event)
-                if not rc == GameStatus.NONE:
+                if rc == GameStatus.GAME_EXIT:
+                    return rc
+                elif rc == GameStatus.GAME_INIT:
                     running = False
                     break
         while i < 256:
@@ -54,4 +56,6 @@ class Welcome():
                 return GameStatus.GAME_INIT
             elif keys[pg.K_ESCAPE]:
                 return GameStatus.GAME_EXIT
+        elif event.type == pg.QUIT:
+            return GameStatus.GAME_EXIT
         return GameStatus.NONE

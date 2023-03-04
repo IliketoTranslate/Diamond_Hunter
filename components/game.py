@@ -9,8 +9,7 @@ class GameStatus(Enum):
     NONE = 0
     GAME_INIT = 1
     GAME_EXIT = 2
-    PLAYER_DIED = 3
-    NEXT_LEVEL = 4
+    NEXT_LEVEL = 3
 
 class Game():
     def __init__(self, screen) -> None:
@@ -21,7 +20,7 @@ class Game():
         self._tick = 200 #milliseconds
         self._player = None
         self._chances = 3
-        self._diamonds = 1#5
+        self._diamonds = 15
         self.resetGame()
     
     def resetGame(self):
@@ -155,10 +154,10 @@ class Game():
 
 
     def killPlayer(self):
+        self._chances -= 1
         if self._chances == 0:
             self._return_val = GameStatus.GAME_INIT
             self._done = True
-        self._chances -= 1
         self._state.setChances(self._chances)
         self.resetGame()
 
