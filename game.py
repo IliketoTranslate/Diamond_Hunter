@@ -109,6 +109,9 @@ class Game():
             for event in pg.event.get():
                 self.processEvent(event)
             if ticks > self._tick:
+                for el in self._objects:
+                    if el.toBlit():
+                        el.changeSkin()
                 ticks = 0
                 self.moveObjects()
         self._screen.cleanup()
