@@ -45,6 +45,8 @@ class Mud(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)
         self._color = (214,122,25)
+        self.addSkin("mud.png")
+        self._toblit = True
 
 class Wall(GObject):
     def __init__(self, pos_x, pos_y, size):
@@ -68,8 +70,6 @@ class Diamond(GObject):
         self.addSkin("diamond1.png")
         self.addSkin("diamond2.png")
         self.addSkin("diamond3.png")
-        #self._skin = pg.image.load("diamond.png")
-        #self._skin = pg.transform.scale(self._skin, (30, 30))
         self._dropable = True
         self._toblit = True
 
@@ -88,10 +88,16 @@ class Player(GObject):
         self._standing = pg.transform.scale(self._standing, (30, 30))
         self.addSkin("player_move.png")
         self._toblit = True
+        self._walking = False
     def standing(self):
         return self._standing
     def walking(self):
         return self._walking
+    def getSkin(self):
+        if self._walking == True:
+            return self._skins[self._skin_idx]
+        else:
+            return self._standing
         
 class Text():
     def __init__(self, text, color) -> None:
