@@ -17,6 +17,7 @@ class Game():
             self._objects.append(el)
             if el.playable() == True:
                 self._player = el
+                self._player.setSkin(self._player.standing())
     
     def processEvent(self, event):
         if event.type == pg.QUIT:
@@ -25,6 +26,8 @@ class Game():
             delta_x = 0
             delta_y = 0
             keys = pg.key.get_pressed()
+            if keys[pg.K_ESCAPE]:
+                self._done = True
             if keys[pg.K_LEFT]:
                 delta_x = -self._shift
             if keys[pg.K_RIGHT]:
@@ -98,7 +101,10 @@ class Game():
             self._screen.refresh()
             self._screen.blit(self._state)
             for el in self._objects:
-                self._screen.drawObject(el)
+                if not el.toBlit():
+                    self._screen.drawObject(el)
+                else:
+                    self._screen.blitObject(el)
             self._screen.update()
             for event in pg.event.get():
                 self.processEvent(event)

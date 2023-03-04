@@ -10,6 +10,8 @@ class GObject():
         self._dropable = False
         self._movable = False
         self._solid = False
+        self._toblit = False
+        self._skin = None
     
     def getRect(self):
         return self._rect
@@ -23,6 +25,12 @@ class GObject():
         return self._movable
     def solid(self):
         return self._solid
+    def toBlit(self):
+        return self._toblit
+    def setSkin(self, skin):
+        self._skin = skin
+    def getSkin(self):
+        return self._skin
 
 class Mud(GObject):
     def __init__(self, pos_x, pos_y, size):
@@ -60,6 +68,15 @@ class Player(GObject):
         super().__init__(pos_x, pos_y, size)
         self._color = (97,255,0)
         self._playable = True
+        self._standing = pg.image.load("player.png")
+        self._standing = pg.transform.scale(self._standing, (30, 30))
+        self._walking = pg.image.load("player_move.png")
+        self._walking = pg.transform.scale(self._walking, (30, 30))
+        self._toblit = True
+    def standing(self):
+        return self._standing
+    def walking(self):
+        return self._walking
         
 class Text():
     def __init__(self, text, color) -> None:

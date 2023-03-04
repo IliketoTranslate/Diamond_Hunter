@@ -33,6 +33,8 @@ class Screen():
         self._window.fill((0,0,0)) #set background
     def blit(self, text):
         self._window.blit(text.getRenderedText(), (0,0))
+    def blitObject(self, object):
+        self._window.blit(object.getSkin(), object.getRect())
 
     def update(self):
         pg.display.update()
