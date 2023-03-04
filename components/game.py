@@ -156,7 +156,7 @@ class Game():
 
     def killPlayer(self):
         if self._chances == 0:
-            self._return_val = GameStatus.PLAYER_DIED
+            self._return_val = GameStatus.GAME_INIT
             self._done = True
         self._chances -= 1
         self._state.setChances(self._chances)
@@ -174,7 +174,7 @@ class Game():
         while not self._done:
             ticks += clock.tick()
             self._screen.refresh()
-            self._screen.blit(self._state)
+            self._screen.blitText(self._state)
             for el in self._objects:
                 self._screen.blitObject(el)
             self._screen.update()

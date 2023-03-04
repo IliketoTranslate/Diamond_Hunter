@@ -31,7 +31,10 @@ class Screen():
 
     def refresh(self):
         self._window.fill((0,0,0)) #set background
-    def blit(self, text):
+    def blit(self, surface):
+        self._window.blit(surface, (0,0))
+
+    def blitText(self, text):
         self._window.blit(text.getRenderedText(), (0,0))
     def blitObject(self, object):
         self._window.blit(object.getSkin(), object.getRect())
