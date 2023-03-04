@@ -1,5 +1,6 @@
 from screen import Screen
 from boardparser import Boardparser
+from object import Text
 import pygame as pg
 
 class Game():
@@ -10,6 +11,7 @@ class Game():
         self._tick = 200 #milliseconds
         self._objects = list()
         self._player = None
+        self._state = Text("Diamenty: ", (255,255,255))
         _parser = Boardparser(self._shift, "board.txt")
         for el in _parser.generateObjects():
             self._objects.append(el)
@@ -58,6 +60,10 @@ class Game():
                     and not collided_obj.playable():#Mud
                     self._objects.pop(idx)
                     return True
+                elif collided_obj.dropable():#Diamond
+                    self._objects.pop(idx)
+                    self._state.addPoint()
+                    return True
         else:#no collision
             return True
 
@@ -90,6 +96,7 @@ class Game():
         while not self._done:
             ticks += clock.tick(60)
             self._screen.refresh()
+            self._screen.blit(self._state)
             for el in self._objects:
                 self._screen.drawObject(el)
             self._screen.update()
