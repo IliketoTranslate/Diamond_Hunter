@@ -22,12 +22,14 @@ class Game():
         self._chances = 3
         self._show_fps = fps
         self._diamonds = 15
+        self._level = 1
         self.resetGame()
     
     def resetGame(self):
         self._objects = []
         self._state = StateText(self._show_fps, self._chances, (255,255,255))
-        _parser = Boardparser(self._shift, "boards/board1.txt")
+        filename = "boards/board"+str(self._level)+".txt"
+        _parser = Boardparser(self._shift, filename)
         for el in _parser.generateObjects():
             self._objects.append(el)
             if el.playable() == True:
@@ -188,4 +190,8 @@ class Game():
                 if self._show_fps:
                     self._state.setFps(clock.get_fps())
                     self._state.updateText()
+            if self._return_val == GameStatus.NEXT_LEVEL:
+                self._return_val = GameStatus.NONE
+                self._level += 1
+                self.resetGame()
         return self._return_val
