@@ -122,12 +122,16 @@ class Player(GObject):
         self._left = False
         
 class StateText():
-    def __init__(self, chances, color) -> None:
+    def __init__(self, fps, chances, color) -> None:
         self._color = color
         self._points = 0
         self._chances = chances
+        self._show_fps = fps
+        self._fps_rate = 0.0
         self._font = pg.font.SysFont("Calibri", 48)
         self.updateText()
+    def setFps(self, fps):
+        self._fps_rate = round(fps, 2)
     def addPoint(self):
         self._points += 1
         self.updateText()
@@ -137,9 +141,11 @@ class StateText():
         self._chances = chances
         self.updateText()
     def updateText(self):
-        self._wrtx = pg.font.Font.render(self._font, \
-            "Chances left: "+str(self._chances)+ \
-            " Diamonds: "+str(self._points), True, self._color)
+        disp_string = "Chances left: "+str(self._chances)+ \
+            " Diamonds: "+str(self._points)
+        if self._show_fps:
+            disp_string += " Fps: "+str(self._fps_rate)
+        self._wrtx = pg.font.Font.render(self._font, disp_string, True, self._color)
 
     def getRenderedText(self):
         return self._wrtx

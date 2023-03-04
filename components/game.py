@@ -12,7 +12,7 @@ class GameStatus(Enum):
     NEXT_LEVEL = 3
 
 class Game():
-    def __init__(self, screen) -> None:
+    def __init__(self, screen, fps) -> None:
         self._screen = screen
         self._done = False
         self._return_val = GameStatus.GAME_EXIT
@@ -20,12 +20,13 @@ class Game():
         self._tick = 200 #milliseconds
         self._player = None
         self._chances = 3
+        self._show_fps = fps
         self._diamonds = 15
         self.resetGame()
     
     def resetGame(self):
         self._objects = []
-        self._state = StateText(self._chances, (255,255,255))
+        self._state = StateText(self._show_fps, self._chances, (255,255,255))
         _parser = Boardparser(self._shift, "boards/board1.txt")
         for el in _parser.generateObjects():
             self._objects.append(el)
@@ -184,4 +185,7 @@ class Game():
                     el.changeSkin()
                 ticks = 0
                 self.moveObjects()
+                if self._show_fps:
+                    self._state.setFps(clock.get_fps())
+                    self._state.updateText()
         return self._return_val
