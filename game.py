@@ -1,6 +1,6 @@
 from screen import Screen
 from boardparser import Boardparser
-from object import Text
+from object import StateText
 import pygame as pg
 
 from enum import Enum
@@ -17,17 +17,20 @@ class Game():
         self._return_val = GameStatus.GAME_EXIT
         self._shift = 30
         self._tick = 200 #milliseconds
-        self._objects = list()
         self._player = None
         self._chances = 3
-        self._state = Text("Diamenty: ", (255,255,255))
+        self.resetGame()
+    
+    def resetGame(self):
+        self._objects = []
+        self._state = StateText(self._chances, (255,255,255))
         _parser = Boardparser(self._shift, "board.txt")
         for el in _parser.generateObjects():
             self._objects.append(el)
             if el.playable() == True:
                 self._player = el
                 self._player.setSkin(self._player.standing())
-    
+        
     def processEvent(self, event):
         if event.type == pg.QUIT:
             self._done = True
@@ -107,16 +110,25 @@ class Game():
                 check_rect = object.getRect().move(0, self._shift)
                 for el in self._objects:
                     if check_rect.contains(el.getRect()):
+                        if object.inFall(): 
+                            if el.playable() == True:#unfortunately we found player
+                                self.killPlayer()
+                                object.setInFall(False)
+                        else:
+                            object.setInFall(False)
                         break#something exists below
                 #if we get here, there is nothing below, it can drop
                 else:
                     self.moveObject(object, 0, self._shift)
+                    object.setInFall(True)
 
     def killPlayer(self):
-        self._chances -= 1
         if self._chances == 0:
             self._return_val = GameStatus.PLAYER_DIED
             self._done = True
+        self._chances -= 1
+        self._state.setChances(self._chances)
+        self.resetGame()
 
     def mainLoop(self):
         clock = pg.time.Clock()
@@ -126,17 +138,13 @@ class Game():
             self._screen.refresh()
             self._screen.blit(self._state)
             for el in self._objects:
-                if not el.toBlit():
-                    self._screen.drawObject(el)
-                else:
-                    self._screen.blitObject(el)
+                self._screen.blitObject(el)
             self._screen.update()
             for event in pg.event.get():
                 self.processEvent(event)
             if ticks > self._tick:
                 for el in self._objects:
-                    if el.toBlit():
-                        el.changeSkin()
+                    el.changeSkin()
                 ticks = 0
                 self.moveObjects()
         self._screen.cleanup()

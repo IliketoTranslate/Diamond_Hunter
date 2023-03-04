@@ -8,13 +8,12 @@ class GObject():
         self._color = (0,0,0)
         self._playable = False
         self._dropable = False
+        self._inFall = False
         self._movable = False
         self._solid = False
         self._skins = list()
         self._skin_idx = 0
         #this will be deleted after work complete
-        self._skin = None
-        self._toblit = False
     
     def getRect(self):
         return self._rect
@@ -24,12 +23,14 @@ class GObject():
         return self._playable
     def dropable(self):
         return self._dropable
+    def inFall(self):
+        return self._inFall
+    def setInFall(self, val):
+        self._inFall = val
     def movable(self):
         return self._movable
     def solid(self):
         return self._solid
-    def toBlit(self):
-        return self._toblit
     def addSkin(self, file):
         tmp = pg.image.load(file)
         tmp = pg.transform.scale(tmp, (30, 30))
@@ -46,7 +47,6 @@ class Mud(GObject):
         super().__init__(pos_x, pos_y, size)
         self._color = (214,122,25)
         self.addSkin("mud.png")
-        self._toblit = True
 
 class Wall(GObject):
     def __init__(self, pos_x, pos_y, size):
@@ -54,14 +54,12 @@ class Wall(GObject):
         self._color = (136,136,136)
         self._solid = True
         self.addSkin("wall.png")
-        self._toblit = True
 
 class Stone(GObject):
     def __init__(self, pos_x, pos_y, size):
         super().__init__(pos_x, pos_y, size)
         self._color = (225,242,240)
         self.addSkin("stone.png")
-        self._toblit = True
         self._dropable = True
         self._solid = True
         self._movable = True
@@ -75,7 +73,6 @@ class Diamond(GObject):
         self.addSkin("diamond2.png")
         self.addSkin("diamond3.png")
         self._dropable = True
-        self._toblit = True
 
 class Exit(GObject):
     def __init__(self, pos_x, pos_y, size):
@@ -86,7 +83,6 @@ class Exit(GObject):
         self._open = False
         self._color = (255,51,0)
         self._solid = True
-        self._toblit = True
     def openDoors(self):
         self._open = True
     def getSkin(self):
@@ -103,7 +99,6 @@ class Player(GObject):
         self._standing = pg.image.load("player.png")
         self._standing = pg.transform.scale(self._standing, (30, 30))
         self.addSkin("player_move.png")
-        self._toblit = True
         self._walking = False
         self._left = False
     def standing(self):
@@ -125,18 +120,25 @@ class Player(GObject):
     def setRight(self):
         self._left = False
         
-class Text():
-    def __init__(self, text, color) -> None:
-        self._text = text
+class StateText():
+    def __init__(self, chances, color) -> None:
         self._color = color
         self._points = 0
+        self._chances = chances
         self._font = pg.font.SysFont("Calibri", 48)
-        self._wrtx = pg.font.Font.render(self._font, self._text+str(self._points), True, self._color)
+        self.updateText()
     def addPoint(self):
         self._points += 1
-        self._wrtx = pg.font.Font.render(self._font, self._text+str(self._points), True, self._color)
-        self._wrtx 
+        self.updateText()
     def getPoints(self):
         return self._points
+    def setChances(self, chances):
+        self._chances = chances
+        self.updateText()
+    def updateText(self):
+        self._wrtx = pg.font.Font.render(self._font, \
+            "Chances left: "+str(self._chances)+ \
+            " Diamonds: "+str(self._points), True, self._color)
+
     def getRenderedText(self):
         return self._wrtx
