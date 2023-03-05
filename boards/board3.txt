@@ -1,22 +1,22 @@
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-W##RRR####D#R #####R#R####### ####R####W
-W#RPR###### #########RD##R#### ##### ##W
-W########## ##R#####R#R##R########R# ##W
-WR#RR#########R######R##R####R###R#####W
-WR# R######### R##R########R######R#R #W
-W### ##R########R#####R# R########R#RR#W
-WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW###R##R#W
-W# ###R##D# ##R#R##########D#R ######R#W
-W##D#####R##### ########R  R##D####R###W
-W###R##R#R##############RR#R##R########W
-W# #####R########RR #######R##R#D#### #W
-W#R#####R########R#RD##D########R##D#R#W
-W#DR##############RRR##R########D#####RW
-W########WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-W ########## ###D####R#####R###R#######W
-WR##########RR##R########R######R#R ##EW
-W#R##R########R#####R#######D###R#RR###W
-W####RD###########R######R#RD######R###W
-W### ## #R##R#RR#########R#RD######R##RW
-W#D####R##### ###########R##R####R###R#W
+WR#WW#WRR#W###RWR##R####W###R#####RW#D#W
+W##PW#D#R#W###WWW##W#R####R##R#R###W#WRW
+W####W##RD##R####W#####R#WWR#######W#WWW
+WD#W##WRWR##R####W###R######R#RR######RW
+WR#W###W##R#WW##R#WWD#######R#RR######WW
+WRR##R####W###R######R#RR######R##DWW##W
+W##R#WW##R#RR###W####R#RR######W##R#W#RW
+W##W###D######D#R##WWR##R#W#WR##WR##D#RW
+WR#R####W#WW#RD#R##WWR##R##D#W###W##R#WW
+W#R#WW#####RRWR##D#W#WR##WR###WR##D#R#WW
+WW#WW######RRWR##R#W#WR##WR####WW##R#WWW
+W#W#R#R#W###WWR##R####W###R#####WW#R#WWW
+W#W#R#R#W#D#W#WR##WR####R##R#RR####W###W
+WW##WRWR##R####W###D###W#RW######W#WW#DW
+WW###WWR##W#D###WR##R#R###R#WR######W##W
+WW#D####R#WW##R#WWR#######R#WR######W##W
+W##R####W###R######R#RR######W##R#W###WW
+WR#WW##R#WW###W####R#RR######W##RD##R##E
+WW###R######R#RD######R###WW##WR##D#W##W
+WRR###W#####R#RD######W##R#WD#D#RW#R###W
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
