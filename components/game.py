@@ -160,8 +160,8 @@ class Game():
                                 self.killPlayer()
                                 object.setInFall(False)
                                 return
-                        else:
-                            object.setInFall(False)
+                            else:
+                                object.setInFall(False)
                         break#something exists below
                 #if we get here, there is nothing below, it can drop
                 else:

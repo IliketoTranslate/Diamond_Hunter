@@ -1,22 +1,22 @@
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-W#R##R##W#R###D#W###R#R#W ######W##RR##W
+WDR##R##W#R###D#W###R#R#W ######W##RR##W
 W#######W######RWRR# ###W ##D###W####R#W
 W                                      W
 WD######W#R####RW### ###W##R##D#W##R#R#W
-W#######W######RW###  ##W#####R#W### ##W
+W#######WD#####RW###  ##W#####R#W### ##W
 WWWWWWWWWWWWWWWWWWWW WWWWWWWWWWWWWWWWWWW
 W####RR#W##R####W### ##RW####R##W#####RW
-W#######W## ####W### ###W####R#DW#####RW
+W####D##W## ####W### ###W####R#DW#####RW
 W                                      W
 WR##R###W####R##W##RR###W###### WR#####W
-WR####R#W##R##R#W###R#RRW#######WR###R#W
-W#R#####W###R###W### #  W#######WRR##R#W
+WR####R#W##R##R#W###R#RRW#######WR#D#R#W
+W#R##D##W###R###W### #  W#######WRR##R#W
 WWWWWWWWWWWWWWWWWWWW WWWWWWWWWWWWWWWWWWW
-WR#   ##W####R#RW### ###W#RD##R#W######W
+WR#   ##WD###R#RW### ###W#RD##R#W######W
 W##### #WR######W##D ###W ##R#R#W#R#RR#W
-W                                      W
+W                                     DW
 WD## #R#WR####R#W#R# ##RW#R#R###W######W
 W#####R#WR######W###  ##W##R####W###   W
 W#D###R#W##R####W#PD R##W# #####W###RRRW
-W#R####RW## ##R#W#E#####W####R#RW####R#W
+W#R####RW## ##R#W#E#####W####R#RW###DR#W
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
