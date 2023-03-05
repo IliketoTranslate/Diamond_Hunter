@@ -126,12 +126,15 @@ class StateText():
         self._color = color
         self._points = 0
         self._chances = chances
+        self._time_left = 0
         self._show_fps = fps
         self._fps_rate = 0.0
         self._font = pg.font.SysFont("Calibri", 48)
         self.updateText()
     def setFps(self, fps):
         self._fps_rate = round(fps, 2)
+    def setTimeLeft(self, timeleft):
+        self._time_left = timeleft
     def addPoint(self):
         self._points += 1
         self.updateText()
@@ -142,7 +145,8 @@ class StateText():
         self.updateText()
     def updateText(self):
         disp_string = "Chances left: "+str(self._chances)+ \
-            " Diamonds: "+str(self._points)
+            " Diamonds: "+str(self._points)+\
+            " Time left: "+str(self._time_left)
         if self._show_fps:
             disp_string += " Fps: "+str(self._fps_rate)
         self._wrtx = pg.font.Font.render(self._font, disp_string, True, self._color)

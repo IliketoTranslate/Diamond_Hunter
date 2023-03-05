@@ -10,18 +10,21 @@ class GameStatus(Enum):
     GAME_INIT = 1
     GAME_EXIT = 2
     NEXT_LEVEL = 3
+    PLAYER_KILLED = 4
 
 class Game():
     def __init__(self, screen, fps) -> None:
         self._screen = screen
         self._done = False
-        self._return_val = GameStatus.GAME_EXIT
+        self._game_status = GameStatus.GAME_INIT
         self._shift = 30
         self._tick = 200 #milliseconds
         self._player = None
         self._chances = 3
         self._show_fps = fps
         self._diamonds = 15
+        self._time_left = 150
+        self._SECOND = pg.USEREVENT+1
         self._level = 1
         self.resetGame()
     
@@ -35,11 +38,21 @@ class Game():
             if el.playable() == True:
                 self._player = el
                 self._player.setSkin(self._player.standing())
+        self._time_left = 150
+        pg.time.set_timer(self._SECOND, 1000)
         
     def processEvent(self, event):
         if event.type == pg.QUIT:
             self._done = True
-            self._return_val = GameStatus.GAME_EXIT
+            self._game_status = GameStatus.GAME_EXIT
+            return
+        elif event.type == self._SECOND:
+            if self._time_left == 0:
+                self.killPlayer()
+            self._state.setTimeLeft(self._time_left)
+            self._state.updateText()
+            self._time_left -= 1
+            return
         elif event.type == pg.KEYDOWN:
             delta_x = 0
             delta_y = 0
@@ -47,7 +60,10 @@ class Game():
             pg.time.set_timer(pg.KEYDOWN, 200)
             if keys[pg.K_ESCAPE]:
                 self._done = True
-                self._return_val = GameStatus.GAME_INIT
+                self._game_status = GameStatus.GAME_INIT
+                return
+            if keys[pg.K_SPACE]:
+                pass
             if keys[pg.K_LEFT]:
                 delta_x = -self._shift
                 self._player.setWalking(True)
@@ -89,7 +105,7 @@ class Game():
                     return False #move not allowed
             else:
                 if isinstance(collided_obj, Exit):#open doors, end level
-                    self._return_val = GameStatus.NEXT_LEVEL
+                    self._game_status = GameStatus.NEXT_LEVEL
                     return True
                 if not collided_obj.dropable() \
                     and not collided_obj.playable():#Mud
@@ -159,7 +175,7 @@ class Game():
     def killPlayer(self):
         self._chances -= 1
         if self._chances == 0:
-            self._return_val = GameStatus.GAME_INIT
+            self._game_status = GameStatus.GAME_INIT
             self._done = True
         self._state.setChances(self._chances)
         self.resetGame()
@@ -190,8 +206,8 @@ class Game():
                 if self._show_fps:
                     self._state.setFps(clock.get_fps())
                     self._state.updateText()
-            if self._return_val == GameStatus.NEXT_LEVEL:
-                self._return_val = GameStatus.NONE
+            if self._game_status == GameStatus.NEXT_LEVEL:
+                self._game_status = GameStatus.NONE
                 self._level += 1
                 self.resetGame()
-        return self._return_val
+        return self._game_status

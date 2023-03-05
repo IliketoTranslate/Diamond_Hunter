@@ -1,5 +1,5 @@
 import pygame as pg
-from dash import Main
+from diamond import Main
 from components.player import Player
 from components.atm import ATM
 from components.plate import Plate
