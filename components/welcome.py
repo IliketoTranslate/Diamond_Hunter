@@ -11,7 +11,7 @@ class Greet():
         
     def getRect(self):
         return self._rect
-    def getSkin(self):
+    def getSurface(self):
         return self._pic
 
 class Welcome():

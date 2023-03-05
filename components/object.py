@@ -37,7 +37,7 @@ class GObject():
         self._skins.append(tmp)
     def setSkin(self, skin):
         self._skin = skin
-    def getSkin(self):
+    def getSurface(self):
         return self._skins[self._skin_idx]
     def changeSkin(self):
         self._skin_idx = (self._skin_idx+1)%len(self._skins)
@@ -86,7 +86,7 @@ class Exit(GObject):
     def openDoors(self):
         self._open = True
         self._solid = False
-    def getSkin(self):
+    def getSurface(self):
         if self._open == True:
             return self._open_doors
         else:
@@ -108,7 +108,7 @@ class Player(GObject):
         self._walking = isWalking
     def walking(self):
         return self._walking
-    def getSkin(self):
+    def getSurface(self):
         if self._walking == True:
             disp_skin = self._skins[self._skin_idx]
             if self._left == True:
@@ -149,7 +149,35 @@ class StateText():
             " Time left: "+str(self._time_left)
         if self._show_fps:
             disp_string += " Fps: "+str(self._fps_rate)
-        self._wrtx = pg.font.Font.render(self._font, disp_string, True, self._color)
+        self._surface = pg.font.Font.render(self._font, disp_string, True, self._color)
+    def getRect(self):
+        return (0,0)
 
-    def getRenderedText(self):
-        return self._wrtx
+    def getSurface(self):
+        return self._surface
+    
+class Statement():
+    def __init__(self, text):
+        self._text = text
+        self._font = pg.font.SysFont("Calibri", 35)
+        self.size_w = 400
+        self.size_h = 200
+        self.reset()
+
+    def reset(self):
+        self._surface = pg.Surface((self.size_w, self.size_h))
+        self._surface.fill((0,0,0))
+        self._surface.set_alpha(200)
+        _tmp_txt = pg.font.Font.render(self._font, self._text, True, (255,255,255))
+        _tmp_rect = _tmp_txt.get_rect(center=(self.size_w/2, self.size_h/4))
+        self._surface.blit(_tmp_txt, _tmp_rect)
+        _tmp_txt = pg.font.Font.render(self._font, "Press SPACE to continue", True, (255,255,255))
+        self._surface.blit(_tmp_txt, (0,150))
+    def setText(self, text):
+        self._text = text
+        self.reset()
+    def getRect(self):
+        return (500,320)
+    def getSurface(self):
+        return self._surface
+    

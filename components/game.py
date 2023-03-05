@@ -1,6 +1,6 @@
 from .screen import Screen
 from .boardparser import Boardparser
-from .object import StateText,Exit
+from .object import StateText,Exit,Statement
 import pygame as pg
 
 from enum import Enum
@@ -25,6 +25,7 @@ class Game():
         self._diamonds = 15
         self._time_left = 150
         self._SECOND = pg.USEREVENT+1
+        self._statement = None
         self._level = 1
         self.resetGame()
     
@@ -63,7 +64,20 @@ class Game():
                 self._game_status = GameStatus.GAME_INIT
                 return
             if keys[pg.K_SPACE]:
-                pass
+                if self._game_status == GameStatus.PLAYER_KILLED:
+                    self._statement = None
+                    if self._chances == 0:
+                        self._game_status = GameStatus.GAME_INIT
+                        self._done = True
+                    else:
+                        self._game_status = GameStatus.GAME_INIT
+                        self.resetGame()
+                elif self._game_status == GameStatus.NEXT_LEVEL:
+                    self._statement = None
+                    self._game_status = GameStatus.NONE
+                    self._level += 1
+                    self.resetGame()
+
             if keys[pg.K_LEFT]:
                 delta_x = -self._shift
                 self._player.setWalking(True)
@@ -106,6 +120,7 @@ class Game():
             else:
                 if isinstance(collided_obj, Exit):#open doors, end level
                     self._game_status = GameStatus.NEXT_LEVEL
+                    pg.time.set_timer(self._SECOND, 0)
                     return True
                 if not collided_obj.dropable() \
                     and not collided_obj.playable():#Mud
@@ -144,6 +159,7 @@ class Game():
                             if el.playable() == True:#unfortunately we found player
                                 self.killPlayer()
                                 object.setInFall(False)
+                                return
                         else:
                             object.setInFall(False)
                         break#something exists below
@@ -174,11 +190,13 @@ class Game():
 
     def killPlayer(self):
         self._chances -= 1
-        if self._chances == 0:
-            self._game_status = GameStatus.GAME_INIT
-            self._done = True
-        self._state.setChances(self._chances)
-        self.resetGame()
+        self._game_status = GameStatus.PLAYER_KILLED
+        pg.time.set_timer(self._SECOND, 0)
+        #if self._chances == 0:
+        #    self._game_status = GameStatus.GAME_INIT
+        #    self._done = True
+        #self._state.setChances(self._chances)
+        #self.resetGame()
 
     def openDoors(self):
         for object in self._objects:
@@ -192,9 +210,11 @@ class Game():
         while not self._done:
             ticks += clock.tick()
             self._screen.refresh()
-            self._screen.blitText(self._state)
+            self._screen.blitObject(self._state)
             for el in self._objects:
                 self._screen.blitObject(el)
+            if not self._statement == None:
+                self._screen.blitObject(self._statement)
             self._screen.update()
             for event in pg.event.get():
                 self.processEvent(event)
@@ -207,7 +227,10 @@ class Game():
                     self._state.setFps(clock.get_fps())
                     self._state.updateText()
             if self._game_status == GameStatus.NEXT_LEVEL:
-                self._game_status = GameStatus.NONE
-                self._level += 1
-                self.resetGame()
+                self._statement = Statement("Success")
+                #self._game_status = GameStatus.NONE
+                #self._level += 1
+                #self.resetGame()
+            if self._game_status == GameStatus.PLAYER_KILLED:
+                self._statement = Statement("You have failed")
         return self._game_status

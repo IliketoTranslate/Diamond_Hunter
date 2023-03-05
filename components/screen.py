@@ -34,10 +34,8 @@ class Screen():
     def blit(self, surface):
         self._window.blit(surface, (0,0))
 
-    def blitText(self, text):
-        self._window.blit(text.getRenderedText(), (0,0))
     def blitObject(self, object):
-        self._window.blit(object.getSkin(), object.getRect())
+        self._window.blit(object.getSurface(), object.getRect())
 
     def update(self):
         pg.display.update()
