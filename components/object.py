@@ -13,9 +13,6 @@ class GObject():
         self._solid = False
         self._skins = list()
         self._skin_idx = 0
-        self._opening_door_sd = pg.mixer.Sound("sds/opening_door.ogg")
-        self._falling_stone_sd = pg.mixer.Sound("sds/falling_stone.ogg")
-        self._falling_diamond_sd = pg.mixer.Sound("sds/falling_diamond.ogg")
         #this will be deleted after work complete
     
     def getRect(self):
@@ -59,13 +56,14 @@ class Wall(GObject):
         self.addSkin("pic/wall.png")
 
 class Stone(GObject):
-    def __init__(self, pos_x, pos_y, size):
+    def __init__(self, pos_x, pos_y, size, sound):
         super().__init__(pos_x, pos_y, size)
         self._color = (225,242,240)
         self.addSkin("pic/stone.png")
         self._dropable = True
         self._solid = True
         self._movable = True
+        self._falling_stone_sd = sound
     def setInFall(self, val):
         self._inFall = val
         if val == False:
@@ -73,7 +71,7 @@ class Stone(GObject):
                 
 
 class Diamond(GObject):
-    def __init__(self, pos_x, pos_y, size):
+    def __init__(self, pos_x, pos_y, size, sound):
         super().__init__(pos_x, pos_y, size)
         self._color = (2,38,244)
         self.addSkin("pic/diamond.png")
@@ -81,6 +79,7 @@ class Diamond(GObject):
         self.addSkin("pic/diamond2.png")
         self.addSkin("pic/diamond3.png")
         self._dropable = True
+        self._falling_diamond_sd = sound
     def setInFall(self, val):
         self._inFall = val
         if val == False:
@@ -95,6 +94,7 @@ class Exit(GObject):
         self._open = False
         self._color = (255,51,0)
         self._solid = True
+        self._opening_door_sd = pg.mixer.Sound("sds/opening_door.ogg")
     def openDoors(self):
         self._open = True
         self._solid = False
@@ -185,7 +185,8 @@ class Statement():
         _tmp_rect = _tmp_txt.get_rect(center=(self.size_w/2, self.size_h/4))
         self._surface.blit(_tmp_txt, _tmp_rect)
         _tmp_txt = pg.font.Font.render(self._font, "Press SPACE to continue", True, (255,255,255))
-        self._surface.blit(_tmp_txt, (0,150))
+        _tmp_rect = _tmp_txt.get_rect(center=(self.size_w/2, 3*self.size_h/4))
+        self._surface.blit(_tmp_txt, _tmp_rect)
     def setText(self, text):
         self._text = text
         self.reset()
