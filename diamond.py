@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import argparse
-from components.screen import Screen
+from components.screen import Screen           
 from components.game import Game,GameStatus
 from components.welcome import Welcome
 

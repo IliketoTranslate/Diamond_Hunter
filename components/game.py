@@ -28,6 +28,9 @@ class Game():
         self._statement = None
         self._level = 1
         self.resetGame()
+        self._breaking_dirt_sd = pg.mixer.Sound("sds/breaking_dirt.ogg")
+        self._collecting_diamond_sd = pg.mixer.Sound("sds/collecting_diamond.ogg")
+        self._player_death_sd = pg.mixer.Sound("sds/player_death.ogg")
     
     def resetGame(self):
         self._objects = []
@@ -125,10 +128,12 @@ class Game():
                 if not collided_obj.dropable() \
                     and not collided_obj.playable():#Mud
                     self._objects.pop(idx)
+                    pg.mixer.Sound.play(self._breaking_dirt_sd)
                     return True
                 elif collided_obj.dropable():#Diamond
                     self._objects.pop(idx)
                     self._state.addPoint()
+                    pg.mixer.Sound.play(self._collecting_diamond_sd)
                     if self._state.getPoints() == self._diamonds:
                         self.openDoors()
                     return True
@@ -155,7 +160,7 @@ class Game():
                 for el in self._objects:
                     if check_rect.contains(el.getRect()):
                         obj_below = el
-                        if object.inFall(): 
+                        if object.inFall() == True: 
                             if el.playable() == True:#unfortunately we found player
                                 self.killPlayer()
                                 object.setInFall(False)
@@ -192,6 +197,7 @@ class Game():
         self._chances -= 1
         self._game_status = GameStatus.PLAYER_KILLED
         pg.time.set_timer(self._SECOND, 0)
+        pg.mixer.Sound.play(self._player_death_sd)
         #if self._chances == 0:
         #    self._game_status = GameStatus.GAME_INIT
         #    self._done = True

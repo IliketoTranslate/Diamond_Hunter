@@ -7,6 +7,9 @@ class Screen():
         self._screen_w = 1200
         self._screen_size = None
         self._window = pg.display.set_mode((self._screen_w, self._screen_h), pg.RESIZABLE)
+        self.title = pg.display.set_caption("Diamond Hunter")
+        self.ic_image = pg.image.load("pic/diamond_hunter.png")
+        self.icon = pg.display.set_icon(self.ic_image)
         self._window.fill((0,0,0)) #set background
         self._suppress_resize = False
     

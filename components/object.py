@@ -13,6 +13,9 @@ class GObject():
         self._solid = False
         self._skins = list()
         self._skin_idx = 0
+        self._opening_door_sd = pg.mixer.Sound("sds/opening_door.ogg")
+        self._falling_stone_sd = pg.mixer.Sound("sds/falling_stone.ogg")
+        self._falling_diamond_sd = pg.mixer.Sound("sds/falling_diamond.ogg")
         #this will be deleted after work complete
     
     def getRect(self):
@@ -63,6 +66,11 @@ class Stone(GObject):
         self._dropable = True
         self._solid = True
         self._movable = True
+    def setInFall(self, val):
+        self._inFall = val
+        if val == False:
+             pg.mixer.Sound.play(self._falling_stone_sd)
+                
 
 class Diamond(GObject):
     def __init__(self, pos_x, pos_y, size):
@@ -73,6 +81,10 @@ class Diamond(GObject):
         self.addSkin("pic/diamond2.png")
         self.addSkin("pic/diamond3.png")
         self._dropable = True
+    def setInFall(self, val):
+        self._inFall = val
+        if val == False:
+            pg.mixer.Sound.play(self._falling_diamond_sd)
 
 class Exit(GObject):
     def __init__(self, pos_x, pos_y, size):
@@ -86,6 +98,7 @@ class Exit(GObject):
     def openDoors(self):
         self._open = True
         self._solid = False
+        pg.mixer.Sound.play(self._opening_door_sd)
     def getSurface(self):
         if self._open == True:
             return self._open_doors
