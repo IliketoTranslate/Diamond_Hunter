@@ -24,6 +24,9 @@ class Main:
             rc = self._game.mainLoop()
             if rc == GameStatus.GAME_EXIT:
                 self._running = False
+            elif rc == GameStatus.GAME_ENDED:
+                self._game = Game(self._screen, self._show_fps)
+                rc = GameStatus.GAME_INIT
         self._screen.cleanup()
 
 if __name__ == "__main__":

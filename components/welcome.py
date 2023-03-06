@@ -31,7 +31,7 @@ class Welcome():
             if i > 0:
                 self._screen.blit(self._shutter)
                 self._shutter.set_alpha(i)
-                i-=1
+                i-=2
             self._screen.update()
             for event in pg.event.get():
                 rc = self.processEvent(event)
@@ -45,7 +45,7 @@ class Welcome():
             self._shutter.set_alpha(i)
             self._screen.blitObject(self._greet)
             self._screen.blit(self._shutter)
-            i+=1
+            i+=5
             self._screen.update()
         return rc
 

@@ -191,7 +191,7 @@ class Statement():
         self._text = text
         self.reset()
     def getRect(self):
-        return (500,320)
+        return (400,254)
     def getSurface(self):
         return self._surface
     

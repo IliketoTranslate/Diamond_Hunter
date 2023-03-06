@@ -11,6 +11,7 @@ class GameStatus(Enum):
     GAME_EXIT = 2
     NEXT_LEVEL = 3
     PLAYER_KILLED = 4
+    GAME_ENDED = 5
 
 class Game():
     def __init__(self, screen, fps) -> None:
@@ -42,6 +43,9 @@ class Game():
             if el.playable() == True:
                 self._player = el
                 self._player.setSkin(self._player.standing())
+        if len(self._objects) == 0:#no board loaded
+            self._game_status = GameStatus.GAME_ENDED
+            return
         self._time_left = 150
         pg.time.set_timer(self._SECOND, 1000)
         
@@ -72,27 +76,36 @@ class Game():
                     if self._chances == 0:
                         self._game_status = GameStatus.GAME_INIT
                         self._done = True
+                        return
                     else:
                         self._game_status = GameStatus.GAME_INIT
                         self.resetGame()
+                        return
                 elif self._game_status == GameStatus.NEXT_LEVEL:
                     self._statement = None
                     self._game_status = GameStatus.NONE
                     self._level += 1
                     self.resetGame()
-
+                    return
+                elif self._game_status == GameStatus.GAME_ENDED:
+                    self._statement = None
+                    self._done = True
+                    return
+            if self._game_status == GameStatus.PLAYER_KILLED \
+                or self._game_status == GameStatus.GAME_ENDED:
+                return
             if keys[pg.K_LEFT]:
                 delta_x = -self._shift
                 self._player.setWalking(True)
                 self._player.setLeft()
-            if keys[pg.K_RIGHT]:
+            elif keys[pg.K_RIGHT]:
                 delta_x = self._shift
                 self._player.setWalking(True)
                 self._player.setRight()
-            if keys[pg.K_UP]:
+            elif keys[pg.K_UP]:
                 delta_y = -self._shift
                 self._player.setWalking(True)
-            if keys[pg.K_DOWN]:
+            elif keys[pg.K_DOWN]:
                 delta_y = self._shift
                 self._player.setWalking(True)
             if self.movePlayer(delta_x, delta_y) == True:
@@ -105,6 +118,8 @@ class Game():
             self._screen.processEvent(event)
 
     def movePlayer(self, delta_x, delta_y) -> bool:
+        if delta_x == 0 and delta_y == 0:
+            return False
         updated_rect = self._player.getRect().move(delta_x, delta_y)
         rect_list = [el.getRect() for el in self._objects]
         idx = updated_rect.collidelist(rect_list)
@@ -198,11 +213,6 @@ class Game():
         self._game_status = GameStatus.PLAYER_KILLED
         pg.time.set_timer(self._SECOND, 0)
         pg.mixer.Sound.play(self._player_death_sd)
-        #if self._chances == 0:
-        #    self._game_status = GameStatus.GAME_INIT
-        #    self._done = True
-        #self._state.setChances(self._chances)
-        #self.resetGame()
 
     def openDoors(self):
         for object in self._objects:
@@ -234,9 +244,8 @@ class Game():
                     self._state.updateText()
             if self._game_status == GameStatus.NEXT_LEVEL:
                 self._statement = Statement("Success")
-                #self._game_status = GameStatus.NONE
-                #self._level += 1
-                #self.resetGame()
             if self._game_status == GameStatus.PLAYER_KILLED:
                 self._statement = Statement("You have failed")
+            if self._game_status == GameStatus.GAME_ENDED:
+                self._statement = Statement("Game Over")
         return self._game_status
