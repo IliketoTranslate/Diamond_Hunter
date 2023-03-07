@@ -32,6 +32,7 @@ class Game():
         self._breaking_dirt_sd = pg.mixer.Sound("sds/breaking_dirt.ogg")
         self._collecting_diamond_sd = pg.mixer.Sound("sds/collecting_diamond.ogg")
         self._player_death_sd = pg.mixer.Sound("sds/player_death.ogg")
+        self.backgorund_music = pg.mixer.Sound("sds/background_music.ogg")
     
     def resetGame(self):
         self._objects = []
@@ -221,6 +222,7 @@ class Game():
                 break
 
     def mainLoop(self):
+        pg.mixer.Sound.play(self.backgorund_music)
         clock = pg.time.Clock()
         ticks = 0
         while not self._done:
